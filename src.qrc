@@ -1,0 +1,17 @@
+<RCC>
+    <qresource prefix="/img">
+        <file>Image/background1.png</file>
+        <file>Image/Madeline.png</file>
+        <file>Image/Platform.png</file>
+        <file>Image/Gameplay0.data.png</file>
+        <file>Image/MadelineDashed.png</file>
+        <file>Image/MadelineDashing.png</file>
+        <file>Image/MadelineDuck01.png</file>
+        <file>Image/MadelineDuck02.png</file>
+        <file>Image/MadelineDuck03.png</file>
+    </qresource>
+    <qresource prefix="/snd">
+        <file>Music/snd_dead.mp3</file>
+        <file>Music/snd_jump.mp3</file>
+    </qresource>
+</RCC>
