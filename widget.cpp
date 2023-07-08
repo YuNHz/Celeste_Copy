@@ -1,24 +1,62 @@
-#include "widget.h"
-#include "ui_widget.h"
-#include <QTimer>
-#include <QKeyEvent>
-#include "spike.h"
-#include "platform.h"
-#include "madeline.h"
-#include <iostream>
-using namespace std;
+#include "Widget.h"
+#include "ui_Widget.h"
+#include <QPainter>
+
+
 
 Widget::Widget(QWidget *parent)
     : QWidget(parent)
     , ui(new Ui::Widget)
 {
     ui->setupUi(this);
-    this->setFixedSize(960,540);
+    setFixedSize(1080,608);
+    setWindowIcon(QIcon("D:/QTProject/Celeste_Copy/Image/Strawberry.png"));
+    setWindowTitle("Welcome to celeste");
+    MainInterface = new maininterface(WelcomePlayer);
 
-    mGameView.setSceneRect(QRect(0,0,960,540));
-    mScene.setSceneRect(QRect(0,0,960,540));
+    WelcomePlayer->setSource(QUrl::fromLocalFile("D:/QTProject/Celeste_Copy/Music/mus_lvl0_intro_loop.wav"));
+    WelcomePlayer->setVolume(0.35f);
+    WelcomePlayer->setLoopCount(WelcomePlayer->Infinite);
+    WelcomePlayer->play();
+    setupWelcomeMovie();
+}
 
-    Game();
+void Widget::setupWelcomeMovie()
+{
+    BackgroundMovie = new QMovie("D:/QTProject/Celeste_Copy/Movie/welcomeinterface.gif");
+    BackgroundMovie->setCacheMode(QMovie::CacheAll);
+    //BackgroundMovie->setSpeed(100); // 可选：设置视频播放速度
+
+    QLabel *backgroundLabel = new QLabel(this);
+    backgroundLabel->setMovie(BackgroundMovie);
+    backgroundLabel->setGeometry(0, 0, this->width(), this->height());
+    backgroundLabel->lower();
+    backgroundLabel->setScaledContents(true);
+
+    BackgroundMovie->start();
+}
+
+void Widget::keyPressEvent(QKeyEvent *event)
+{
+    if (event->key() == Qt::Key_C) {
+        PressPlayer->setSource(QUrl::fromLocalFile("D:/QTProject/Celeste_Copy/Music/ui_main_button_climb.wav"));
+        PressPlayer->setVolume(0.35f);
+        PressPlayer->setLoopCount(1);
+        PressPlayer->play();
+        switchToMainInterface();
+    }
+    // 如果需要，你还可以处理其他键盘事件
+}
+
+void Widget::switchToMainInterface(){
+    this->hide();
+    MainInterface->show();
+    connect(MainInterface, &maininterface::returnToWidget, this, &Widget::switchToWidget);
+}
+void Widget::switchToWidget()
+{
+    MainInterface->hide();
+    this->show();
 }
 
 Widget::~Widget()
@@ -26,136 +64,4 @@ Widget::~Widget()
     delete ui;
 }
 
-void Widget::keyPressEvent(QKeyEvent *event){
-    switch(event->key()){
-        case Qt::Key_A:{
-            if(mKeyList.contains(Qt::Key_D)){
-                mKeyList.removeOne(Qt::Key_D);
-                mKeyList.append(event->key());
-                break;
-            }
-            else{
-                mKeyList.append(event->key());
-                break;
-            }
-        }
-        case Qt::Key_D:{
-            if(mKeyList.contains(Qt::Key_A)){
-                mKeyList.removeOne(Qt::Key_A);
-                mKeyList.append(event->key());
-                break;
-            }
-            else{
-                mKeyList.append(event->key());
-                break;
-            }
-        }
-        case Qt::Key_W:     mKeyList.append(event->key());break;
-        case Qt::Key_S:     mKeyList.append(event->key());break;
-        case Qt::Key_C:     mKeyList.append(event->key());break;
-        case Qt::Key_X:     mKeyList.append(event->key());break;
-        case Qt::Key_Z:     mKeyList.append(event->key());break;
-    }
-}
 
-void Widget::keyReleaseEvent(QKeyEvent* event){
-    if(mKeyList.contains(event->key())){
-        mKeyList.removeOne(event->key());
-    }
-}
-
-void Widget::Game(){
-    Map1();
-    GameTimer = new QTimer(this);
-    GameTimer->start(1000/60);
-    connect(GameTimer,&QTimer::timeout,this,[this](){
-        Hero->operate(mKeyList);
-//        Collosion();
-        if(Hero->isDead()){
-            GameTimer->stop();
-            QTimer * timer = new QTimer;
-            timer->start(50);
-            connect(timer,&QTimer::timeout,this,[&](){
-                if(Hero->grap<5) Hero->deadGraphics();
-                else{
-                    timer->stop();
-                }
-            });
-        }
-    });
-}
-
-void Widget::Collosion(){
-            cout<<Hero->boundingRect().x()<<"    "<<Hero->boundingRect().y()<<endl;
-    for(auto it:Map){
-        cout<<Hero->Box().intersects(it->boundingRect())<<endl;
-        if(Hero->Box().intersects(it->boundingRect())){
-            if(it->boundingRect().height()==21||it->boundingRect().width()==21){
-                    cout<<"12345678"<<endl;
-                Hero->die();
-            }
-            else{
-                cout<<"12345678"<<endl;
-                Hero->y = it->y()-48;
-            }
-        }
-    }
-}
-
-void Widget::Map1(){
-    mBackground.setPixmap(QPixmap("D:\\QTProject\\Celeste_Copy\\Image\\backgroundT.png").scaled(960,540,Qt::KeepAspectRatio));
-    mScene.addItem(&mBackground);
-
-    Hero = new Madeline(24,540-120-48,0);
-
-    Platform * PlatformP;
-    Spike * SpikeP;
-
-//    PlatformP = new Platform(5,0.0,540.0-24.0*5,0);
-//    Map.append(PlatformP);
-//    PlatformP = new Platform(5,120.0,540.0-24.0*2,0);
-//    Map.append(PlatformP);
-//    PlatformP = new Platform(3,240.0,540.0-24.0*7,0);
-//    Map.append(PlatformP);
-//    PlatformP = new Platform(5,312.0,540.0-24.0*4,0);
-//    Map.append(PlatformP);
-//    PlatformP = new Platform(3,432.0,540.0-24.0*13,0);
-//    Map.append(PlatformP);
-//    PlatformP = new Platform(4,528.0,540.0-24.0*7,0);
-//    Map.append(PlatformP);
-//    PlatformP = new Platform(3,432.0,540.0-24.0*13,0);
-//    Map.append(PlatformP);
-//    PlatformP = new Platform(4,528.0,540.0-24.0*7,0);
-//    Map.append(PlatformP);
-//    PlatformP = new Platform(3,624.0,540.0-24.0*3,0);
-//    Map.append(PlatformP);
-//    PlatformP = new Platform(5,744.0,540.0-24.0*16,0);
-//    Map.append(PlatformP);
-//    PlatformP = new Platform(2,864.0,540.0-24.0*21,0);
-//    Map.append(PlatformP);
-
-    SpikeP = new Spike(5,120.0,540-(48.0+21.0),0);
-    Map.append(SpikeP);
-    SpikeP = new Spike(5,312.0,540-(24.0*4+21.0),0);
-    Map.append(SpikeP);
-    SpikeP = new Spike(4,528.0,540-(24.0*7+21.0),0);
-    Map.append(SpikeP);
-    SpikeP = new Spike(3,624.0,540-(24.0*3+21.0),0);
-    Map.append(SpikeP);
-
-    for(auto it:Map){
-        mScene.addItem(it);
-    }
-
-    mScene.addItem(Hero);
-    mGameView.setScene(&mScene);
-    mGameView.setParent(this);
-    mGameView.show();
-
-    if(first){
-        backGroundMusic.setSource(QUrl::fromLocalFile("D:/QTProject/Celeste_Copy/Music/mus_lvl2_badeline_loop.wav"));
-        backGroundMusic.setLoopCount(QSoundEffect::Infinite);
-        backGroundMusic.play();
-        first = false;
-    }
-}

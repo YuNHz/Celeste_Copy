@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE QtCreatorProject>
-<!-- Written by QtCreator 10.0.1, 2023-06-04T17:09:04. -->
+<!-- Written by QtCreator 10.0.1, 2023-07-08T15:30:25. -->
 <qtcreator>
  <data>
   <variable>EnvironmentId</variable>
@@ -81,8 +81,9 @@
     <valuelist type="QVariantList" key="ClangTools.SuppressedDiagnostics"/>
     <value type="bool" key="ClangTools.UseGlobalSettings">true</value>
    </valuemap>
-   <valuemap type="QVariantMap" key="CppEditor.QuickFix">
-    <value type="bool" key="UseGlobalSettings">true</value>
+   <valuemap type="QVariantMap" key="ClangdSettings">
+    <value type="bool" key="blockIndexing">false</value>
+    <value type="bool" key="useGlobalSettings">true</value>
    </valuemap>
   </valuemap>
  </data>
@@ -239,6 +240,7 @@
     <valuelist type="QVariantList" key="CustomOutputParsers"/>
     <value type="int" key="PE.EnvironmentAspect.Base">2</value>
     <valuelist type="QVariantList" key="PE.EnvironmentAspect.Changes"/>
+    <value type="QString" key="ProjectExplorer.ProjectConfiguration.DisplayName">Celeste_Copy2</value>
     <value type="QString" key="ProjectExplorer.ProjectConfiguration.Id">Qt4ProjectManager.Qt4RunConfiguration:D:/QTProject/Celeste_Copy/Celeste_Copy.pro</value>
     <value type="QString" key="ProjectExplorer.RunConfiguration.BuildKey">D:/QTProject/Celeste_Copy/Celeste_Copy.pro</value>
     <value type="bool" key="RunConfiguration.UseCppDebugger">false</value>
